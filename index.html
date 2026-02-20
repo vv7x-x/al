@@ -3,206 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رواية الإيلفار - بوابة التحميل الذكية</title>
+    <title>تحميل رواية الإيلفار</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --accent: #00ffd5;
-            --main-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --glass: rgba(255, 255, 255, 0.07);
+            --primary-color: #00ffd5;
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* يمنع الوميض عند اللمس في الموبايل */
+        }
 
         body {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #0b0e14;
-            overflow: hidden;
-            perspective: 1000px;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            padding: 20px;
+            color: #fff;
         }
 
-        /* الأشكال الخلفية المتحركة */
-        .blob {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: var(--main-gradient);
-            filter: blur(80px);
-            border-radius: 50%;
-            z-index: -1;
-            animation: move 20s infinite alternate;
+        /* حاوية مرنة تناسب جميع الشاشات */
+        .wrapper {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeIn 0.8s ease-out;
         }
 
-        @keyframes move {
-            from { transform: translate(-50%, -50%) scale(1); }
-            to { transform: translate(50%, 50%) scale(1.2); }
-        }
-
-        /* الكرت الزجاجي */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
+        .main-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 40px;
-            width: 90%;
-            max-width: 450px;
+            border-radius: 24px;
+            padding: 30px 20px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: 0.5s;
-        }
-
-        .glass-card:hover::before { left: 100%; }
 
         h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            background: linear-gradient(to right, #fff, var(--accent));
+            font-size: 1.8rem; /* حجم خط مرن */
+            margin: 15px 0 5px;
+            background: linear-gradient(to left, #fff, var(--primary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
         }
 
-        /* دائرة التحميل المتطورة */
-        .progress-container {
+        .author { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; }
+
+        /* منطقة المعلومات - Grid مرن */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 5px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .info-box i { color: var(--primary-color); display: block; margin-bottom: 5px; }
+        .info-box span { font-size: 0.75rem; color: #cbd5e1; display: block; }
+        .info-box b { font-size: 0.9rem; }
+
+        /* دائرة الانتظار الذكية */
+        .loader-container {
+            margin: 20px auto;
             position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 30px auto;
+            width: 80px;
+            height: 80px;
         }
 
-        svg {
-            transform: rotate(-90deg);
-        }
-
-        circle {
+        .circle-svg { transform: rotate(-90deg); }
+        .circle-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 6; }
+        .circle-progress {
             fill: none;
-            stroke-width: 8;
+            stroke: var(--primary-color);
+            stroke-width: 6;
             stroke-linecap: round;
-        }
-
-        .bg-circle { stroke: rgba(255,255,255,0.1); }
-        
-        .prog-circle {
-            stroke: var(--accent);
-            stroke-dasharray: 314;
-            stroke-dashoffset: 314;
+            stroke-dasharray: 226;
+            stroke-dashoffset: 226;
             transition: stroke-dashoffset 0.1s linear;
-            filter: drop-shadow(0 0 8px var(--accent));
         }
 
-        .percentage {
+        #timer-text {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 1.5rem;
             font-weight: bold;
-            color: white;
-        }
-
-        /* أزرار تفاعلية */
-        .download-btn {
-            background: #fff;
-            color: #0b0e14;
-            border: none;
-            padding: 18px 40px;
-            border-radius: 20px;
             font-size: 1.2rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* زر التحميل - مناسب للمس بالإصبع */
+        .btn-download {
+            display: none;
             width: 100%;
-            display: none; /* مخفي في البداية */
+            padding: 16px;
+            border-radius: 16px;
+            background: var(--primary-color);
+            color: #000;
             text-decoration: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            font-weight: 800;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 255, 213, 0.2);
+            border: none;
+            cursor: pointer;
         }
 
-        .download-btn:hover {
-            transform: scale(1.05);
-            background: var(--accent);
-            box-shadow: 0 15px 30px rgba(0, 255, 213, 0.4);
+        .btn-download:active { transform: scale(0.95); }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #64748b;
         }
 
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 20px;
+        /* تحسينات للشاشات الصغيرة جداً */
+        @media (max-width: 350px) {
+            h1 { font-size: 1.5rem; }
+            .info-grid { grid-template-columns: 1fr; } /* تتحول لعمود واحد في الشاشات الصغيرة جداً */
         }
 
-        .stat-box span { display: block; font-size: 0.8rem; color: #aaa; }
-        .stat-box b { font-size: 1.1rem; color: #fff; }
-
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-<div class="blob"></div>
+<div class="wrapper">
+    <div class="main-card">
+        <i class="fas fa-shield-halved" style="color: var(--primary-color); font-size: 1.5rem;"></i>
+        
+        <h1>رواية الإيلفار</h1>
+        <p class="author">بواسطة: قسم الروايات العالمية</p>
 
-<div class="glass-card">
-    <i class="fa-solid fa-bolt" style="color: var(--accent); font-size: 2rem; margin-bottom: 10px;"></i>
-    <h1>رواية الإيلفار</h1>
-    <p style="color: #ccc;">رابط التحميل المباشر والآمن</p>
+        <div class="info-grid">
+            <div class="info-box"><i class="far fa-file-pdf"></i><span>النوع</span><b>PDF</b></div>
+            <div class="info-box"><i class="fas fa-expand"></i><span>الحجم</span><b>4.2MB</b></div>
+            <div class="info-box"><i class="fas fa-check-circle"></i><span>الحالة</span><b>آمن</b></div>
+        </div>
 
-    <div class="progress-container" id="prog-wrapper">
-        <svg width="120" height="120">
-            <circle class="bg-circle" cx="60" cy="60" r="50"></circle>
-            <circle class="prog-circle" id="circle" cx="60" cy="60" r="50"></circle>
-        </svg>
-        <div class="percentage" id="percent-text">0%</div>
-    </div>
+        <div id="loader-section">
+            <div class="loader-container">
+                <svg class="circle-svg" width="80" height="80">
+                    <circle class="circle-bg" cx="40" cy="40" r="36"></circle>
+                    <circle id="bar" class="circle-progress" cx="40" cy="40" r="36"></circle>
+                </svg>
+                <div id="timer-text">10</div>
+            </div>
+            <p style="font-size: 0.9rem; color: #94a3b8;">جاري تحضير الرابط المباشر...</p>
+        </div>
 
-    <a href="33.pdf" download id="download-link" class="download-btn">
-        <i class="fas fa-arrow-down"></i> ابدأ التحميل الآن
-    </a>
+        <a href="33.pdf" download id="download-btn" class="btn-download">
+            <i class="fas fa-download" style="margin-left: 8px;"></i> تحميل الآن
+        </a>
 
-    <div class="stats">
-        <div class="stat-box"><span>الحجم</span><b>4.8 MB</b></div>
-        <div class="stat-box"><span>الصيغة</span><b>PDF</b></div>
-        <div class="stat-box"><span>الأمان</span><b>مشفر</b></div>
+        <p class="footer-note">الرابط صالح للاستخدام مرة واحدة من هذا الجهاز</p>
     </div>
 </div>
 
 <script>
-    let progress = 0;
-    const circle = document.getElementById('circle');
-    const percentText = document.getElementById('percent-text');
-    const downloadBtn = document.getElementById('download-link');
-    const progWrapper = document.getElementById('prog-wrapper');
+    let timeLeft = 10;
+    const bar = document.getElementById('bar');
+    const timerText = document.getElementById('timer-text');
+    const btn = document.getElementById('download-btn');
+    const loader = document.getElementById('loader-section');
+    
+    const total = 226; // محيط الدائرة (2 * pi * r)
 
-    const totalCircumference = 2 * Math.PI * 50;
-
-    const interval = setInterval(() => {
-        progress += 1;
+    const countdown = setInterval(() => {
+        timeLeft--;
+        timerText.innerText = timeLeft;
         
-        // تحديث الدائرة
-        const offset = totalCircumference - (progress / 100) * totalCircumference;
-        circle.style.strokeDashoffset = offset;
-        percentText.innerText = progress + '%';
+        // تحريك الخط المحيط بالدائرة
+        const offset = total - ((10 - timeLeft) / 10) * total;
+        bar.style.strokeDashoffset = offset;
 
-        if (progress >= 100) {
-            clearInterval(interval);
-            progWrapper.style.display = 'none';
-            downloadBtn.style.display = 'block';
-            downloadBtn.style.animation = 'fadeInUp 0.5s ease forwards';
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            loader.style.display = 'none';
+            btn.style.display = 'block';
+            btn.style.animation = 'fadeIn 0.5s ease-out';
         }
-    }, 50); // سرعة العداد (5 ثواني إجمالاً)
+    }, 1000);
 </script>
 
 </body>
