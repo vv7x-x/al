@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>بوابة إيلفار</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cinzel:wght@900&display=swap" rel="stylesheet">
@@ -10,8 +10,7 @@
 <style>
 :root{
 --gold:#c5a059;
---glow:rgba(197,160,89,0.7);
---bg:#050507;
+--glow:rgba(197,160,89,0.6);
 }
 
 *{
@@ -20,28 +19,26 @@ padding:0;
 box-sizing:border-box;
 }
 
-html,body{
-height:100%;
-}
-
 body{
-background:radial-gradient(circle at center,#0d0d15 0%,#000 70%);
+min-height:100svh;
 display:flex;
 justify-content:center;
 align-items:center;
-overflow:hidden;
+background:radial-gradient(circle at center,#111 0%,#000 70%);
 font-family:'Amiri',serif;
+overflow:hidden;
 color:#fff;
-padding:env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
+padding:20px;
 }
 
-/* ===== الضباب ===== */
+/* ضباب */
 .fog{
-position:absolute;
-inset:-50%;
+position:fixed;
+inset:-40%;
 background:radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 70%);
 animation:fogMove 60s linear infinite;
 opacity:.25;
+pointer-events:none;
 }
 
 @keyframes fogMove{
@@ -49,63 +46,39 @@ from{transform:translateX(0)}
 to{transform:translateX(-30%)}
 }
 
-/* ===== البوابة ===== */
+/* البوابة */
 .portal{
 position:relative;
-width:clamp(260px, 60vw, 520px);
+width:min(90vw,450px);
 aspect-ratio:4/5;
 border-radius:50% 50% 45% 45%;
-border:clamp(2px,0.6vw,4px) solid var(--gold);
-box-shadow:0 0 clamp(40px,5vw,120px) var(--glow),
-inset 0 0 60px rgba(0,0,0,0.8);
+border:3px solid var(--gold);
+background:radial-gradient(circle,#111 0%,#000 70%);
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-background:radial-gradient(circle,#111 0%,#000 70%);
-transition:0.6s ease;
-cursor:pointer;
 text-align:center;
-padding:clamp(20px,4vw,40px);
-}
-
-.portal::before{
-content:"";
-position:absolute;
-width:110%;
-height:110%;
-border-radius:inherit;
-border:1px solid rgba(197,160,89,0.3);
-animation:rotate 18s linear infinite;
-}
-
-@keyframes rotate{
-from{transform:rotate(0)}
-to{transform:rotate(360deg)}
+padding:30px;
+box-shadow:0 0 60px var(--glow);
+cursor:pointer;
+transition:0.4s ease;
 }
 
 .portal h1{
 font-family:'Cinzel',serif;
 font-size:clamp(1.8rem,5vw,3rem);
-letter-spacing:clamp(4px,1vw,12px);
+letter-spacing:clamp(4px,1vw,10px);
 color:var(--gold);
-text-shadow:0 0 20px var(--glow);
-margin-bottom:clamp(10px,2vw,20px);
-transition:0.4s;
+margin-bottom:15px;
 }
 
 .portal p{
-font-size:clamp(0.9rem,2.5vw,1.1rem);
+font-size:clamp(.9rem,2.5vw,1.1rem);
 opacity:.75;
-margin-bottom:clamp(8px,2vw,15px);
 }
 
-.portal:hover{
-transform:scale(1.05);
-box-shadow:0 0 clamp(80px,8vw,200px) var(--gold);
-}
-
-/* ===== مودال ===== */
+/* مودال */
 .modal{
 position:fixed;
 inset:0;
@@ -113,11 +86,11 @@ background:rgba(0,0,0,0.92);
 display:flex;
 justify-content:center;
 align-items:center;
+padding:20px;
 opacity:0;
 visibility:hidden;
-transition:0.5s ease;
-backdrop-filter:blur(10px);
-padding:20px;
+transition:.4s ease;
+backdrop-filter:blur(8px);
 }
 
 .modal.active{
@@ -130,14 +103,13 @@ width:100%;
 max-width:400px;
 background:#0a0a12;
 border:1px solid var(--gold);
-padding:clamp(25px,5vw,50px);
+padding:30px;
 text-align:center;
 }
 
 .modal-content h2{
 color:var(--gold);
-margin-bottom:20px;
-font-size:clamp(1.2rem,3vw,1.8rem);
+margin-bottom:15px;
 }
 
 .file-info{
@@ -157,8 +129,7 @@ padding:12px;
 border:1px solid var(--gold);
 color:var(--gold);
 text-decoration:none;
-transition:0.4s;
-font-size:clamp(0.9rem,2.5vw,1rem);
+transition:.3s;
 }
 
 .modal-buttons a:hover{
@@ -168,17 +139,9 @@ color:#000;
 
 .close{
 margin-top:15px;
-font-size:.8rem;
+font-size:.85rem;
 opacity:.6;
 cursor:pointer;
-}
-
-/* ===== تحسين الشاشات القصيرة ===== */
-@media (max-height:600px){
-.portal{
-aspect-ratio:auto;
-height:80vh;
-}
 }
 </style>
 </head>
@@ -190,78 +153,74 @@ height:80vh;
 <div class="portal" id="portal">
 <h1>ELEVAR</h1>
 <p>بوابة المخطوطة العظمى</p>
-<p style="font-style:italic;">الحقيقة خلف الظلال</p>
+<p>الحقيقة خلف الظلال</p>
 </div>
 
 <div class="modal" id="modal">
 <div class="modal-content">
 <h2>مخطوطة إيلفار</h2>
-<div class="file-info" id="fileSize">جاري قياس الطاقة...</div>
+<div class="file-info" id="fileSize">جاري القياس...</div>
 <div class="modal-buttons">
 <a href="33.pdf" target="_blank">📖 فتح</a>
 <a href="33.pdf" download>⬇️ تحميل</a>
 </div>
-<div class="close" id="closeBtn">إغلاق</div>
+<div class="close" id="closeBtn">إغلاق البوابة</div>
 </div>
 </div>
 
-<audio id="portalSound" src="portal.mp3" preload="auto"></audio>
+<audio id="openSound" src="portal-open.mp3" preload="auto"></audio>
+<audio id="closeSound" src="portal-close.mp3" preload="auto"></audio>
 
 <script>
 const portal=document.getElementById("portal");
 const modal=document.getElementById("modal");
 const fileSize=document.getElementById("fileSize");
-const sound=document.getElementById("portalSound");
 const closeBtn=document.getElementById("closeBtn");
 
-portal.addEventListener("click",async()=>{
+const openSound=document.getElementById("openSound");
+const closeSound=document.getElementById("closeSound");
+
+portal.addEventListener("click", async ()=>{
 try{
-sound.currentTime=0;
-sound.volume=1;
-await sound.play();
+closeSound.pause();
+openSound.currentTime=0;
+await openSound.play();
 }catch(e){}
 
 modal.classList.add("active");
 document.body.style.overflow="hidden";
 getFileSize();
-fadeOutAudio();
 });
 
 function closePortal(){
 modal.classList.remove("active");
 document.body.style.overflow="auto";
+
+try{
+openSound.pause();
+closeSound.currentTime=0;
+closeSound.play();
+}catch(e){}
 }
 
 closeBtn.onclick=closePortal;
-
-window.addEventListener("keydown",(e)=>{
-if(e.key==="Escape") closePortal();
-});
 
 modal.addEventListener("click",(e)=>{
 if(e.target===modal) closePortal();
 });
 
-function fadeOutAudio(){
-let fade=setInterval(()=>{
-if(sound.volume>0.05){
-sound.volume-=0.05;
-}else{
-sound.pause();
-sound.volume=1;
-clearInterval(fade);
-}
-},120);
-}
+window.addEventListener("keydown",(e)=>{
+if(e.key==="Escape") closePortal();
+});
 
 async function getFileSize(){
 try{
 let response=await fetch("33.pdf");
 let blob=await response.blob();
 let size=(blob.size/(1024*1024)).toFixed(2);
-fileSize.innerText="طاقة المخطوطة: "+size+" MB";
+fileSize.innerText="حجم المخطوطة: "+size+" MB";
 }catch{
-fileSize.innerText="طاقة تقديرية: 4.20 MB";
+fileSize.innerText="حجم تقريبي: 4.20 MB";
 }
 }
 </script>
