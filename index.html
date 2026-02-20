@@ -25,7 +25,7 @@ height:100%;
 }
 
 body{
-min-height:100dvh; /* حل مشكلة vh في الموبايل */
+min-height:100dvh;
 background:radial-gradient(circle at center,#0d0d15 0%,#000 70%);
 display:flex;
 justify-content:center;
@@ -106,7 +106,6 @@ letter-spacing:clamp(4px,1vw,12px);
 color:var(--gold);
 text-shadow:0 0 20px var(--glow);
 margin-bottom:clamp(10px,2vw,20px);
-transition:0.4s;
 }
 
 .portal p{
@@ -120,7 +119,7 @@ transform:scale(1.05);
 box-shadow:0 0 clamp(80px,8vw,200px) var(--gold);
 }
 
-/* تعطيل hover في الأجهزة اللمسية */
+/* تعطيل hover على الأجهزة اللمسية */
 @media (hover:none){
 .portal:hover{
 transform:none;
@@ -128,28 +127,25 @@ box-shadow:0 0 clamp(40px,5vw,120px) var(--glow);
 }
 }
 
-/* ===== مودال احترافي متكيف بالكامل ===== */
-
+/* ===== مودال مستقر 100% ===== */
 .modal{
 position:fixed;
 inset:0;
 background:rgba(0,0,0,0.92);
-display:flex;
-justify-content:center;
-align-items:center;
+display:grid;
+place-items:center;
 opacity:0;
 visibility:hidden;
-transition:0.4s ease;
+transition:opacity .35s ease;
 backdrop-filter:blur(10px);
 
-/* مهم */
 padding:
 max(20px, env(safe-area-inset-top))
 max(20px, env(safe-area-inset-right))
 max(20px, env(safe-area-inset-bottom))
 max(20px, env(safe-area-inset-left));
 
-overflow-y:auto; /* يسمح بالتمرير لو الشاشة قصيرة */
+overflow:auto;
 }
 
 .modal.active{
@@ -158,46 +154,83 @@ visibility:visible;
 }
 
 .modal-content{
-width:min(100%, 420px);
-max-height:100%;
+width:100%;
+max-width:420px;
+max-height:calc(100dvh - 40px);
 background:#0a0a12;
 border:1px solid var(--gold);
 padding:clamp(20px,4vw,40px);
 text-align:center;
-animation:scaleIn .4s ease;
-border-radius:14px;
-
-/* يمنع الخروج خارج الشاشة */
-overflow-y:auto;
+animation:scaleIn .35s ease;
+border-radius:16px;
+overflow:auto;
 }
 
-/* تحسين خاص للشاشات القصيرة جداً */
-@media (max-height:650px){
-.modal{
-align-items:flex-start;
-}
-.modal-content{
-margin-top:30px;
-margin-bottom:30px;
-}
+@keyframes scaleIn{
+from{transform:scale(.85);opacity:0}
+to{transform:scale(1);opacity:1}
 }
 
-/* تحسين للهواتف الصغيرة جداً */
-@media (max-width:360px){
-.modal-content{
-padding:18px;
-}
+.modal-content h2{
+color:var(--gold);
+margin-bottom:20px;
+font-size:clamp(1.2rem,3vw,1.8rem);
 }
 
-/* ===== تحسين الشاشات القصيرة جداً ===== */
+.file-info{
+margin-bottom:20px;
+opacity:.7;
+min-height:20px;
+}
+
+.modal-buttons{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.modal-buttons a{
+padding:12px;
+border:1px solid var(--gold);
+color:var(--gold);
+text-decoration:none;
+transition:0.3s;
+font-size:clamp(0.9rem,2.5vw,1rem);
+}
+
+.modal-buttons a:hover{
+background:var(--gold);
+color:#000;
+}
+
+.close{
+margin-top:15px;
+font-size:.8rem;
+opacity:.6;
+cursor:pointer;
+transition:.3s;
+}
+
+.close:hover{
+opacity:1;
+}
+
+/* شاشات قصيرة جداً */
 @media (max-height:600px){
+.modal{
+place-items:start center;
+}
+.modal-content{
+margin-top:20px;
+margin-bottom:20px;
+}
 .portal{
 height:80dvh;
 aspect-ratio:auto;
 }
 }
 
-/* ===== تحسين الشاشات الكبيرة جداً ===== */
+/* شاشات كبيرة جداً */
 @media (min-width:1600px){
 .portal{
 width:480px;
@@ -228,10 +261,7 @@ width:480px;
 </div>
 </div>
 
-<!-- صوت الفتح -->
 <audio id="openSound" src="open.mp3" preload="auto"></audio>
-
-<!-- صوت الإغلاق -->
 <audio id="closeSound" src="close.mp3" preload="auto"></audio>
 
 <script>
@@ -245,7 +275,6 @@ const closeBtn=document.getElementById("closeBtn");
 portal.addEventListener("click",async()=>{
 try{
 openSound.currentTime=0;
-openSound.volume=1;
 await openSound.play();
 }catch(e){}
 
@@ -262,7 +291,6 @@ document.body.style.overflow="auto";
 
 try{
 closeSound.currentTime=0;
-closeSound.volume=1;
 closeSound.play();
 }catch(e){}
 }
