@@ -3,336 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL - رواية الإيلفار</title>
+    <title>رواية الإيلفار - المخطوطة الكاملة</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #00ffcc;
-            --accent: #ff0055;
-            --bg: #02050a;
-            --glass: rgba(10, 20, 30, 0.8);
+            --gold: #c5a059;
+            --dark-paper: #1a1a1a;
+            --text-color: #e0d8c3;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg);
+            background: #0a0a0a;
             height: 100vh;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 2000px;
+            overflow: hidden;
+            font-family: 'Amiri', serif;
+            color: var(--text-color);
         }
 
-        /* خلفية الماتريكس */
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            opacity: 0.3;
-        }
-
-        /* الحاوية الكبرى */
-        .world {
-            position: relative;
-            transform-style: preserve-3d;
-            z-index: 10;
-        }
-
-        /* البطاقة الرئيسية */
-        .card {
-            position: relative;
-            width: 420px;
-            background: var(--glass);
-            border: 2px solid rgba(0, 255, 204, 0.2);
-            border-radius: 40px;
-            padding: 50px 30px;
-            color: white;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 0 50px rgba(0, 255, 204, 0.1), inset 0 0 20px rgba(0, 255, 204, 0.05);
-            transform-style: preserve-3d;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 0 80px rgba(0, 255, 204, 0.2);
-        }
-
-        /* خط الماسح الضوئي */
-        .scanner {
+        /* جزيئات السحر في الخلفية */
+        #particles-js {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            box-shadow: 0 0 15px var(--primary);
-            animation: scan 3s linear infinite;
-            z-index: 5;
+            height: 100%;
+            z-index: 1;
         }
 
-        @keyframes scan {
-            0% { top: 0; opacity: 0; }
-            50% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
+        /* الحاوية الرئيسية */
+        .novel-wrapper {
+            position: relative;
+            z-index: 10;
+            perspective: 1500px;
         }
 
-        /* أيقونة مشعة */
-        .icon-shield {
-            font-size: 4rem;
-            color: var(--primary);
-            filter: drop-shadow(0 0 15px var(--primary));
+        .book-card {
+            width: 400px;
+            background: var(--dark-paper);
+            padding: 50px 40px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 100px rgba(0,0,0,0.5);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* الزخارف الذهبية */
+        .book-card::before, .book-card::after {
+            content: "";
+            position: absolute;
+            width: 80px; height: 80px;
+            border: 2px solid var(--gold);
+        }
+        .book-card::before { top: 20px; right: 20px; border-bottom: none; border-left: none; }
+        .book-card::after { bottom: 20px; left: 20px; border-top: none; border-right: none; }
+
+        .feather-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
             margin-bottom: 20px;
-            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.5));
+            animation: float 3s ease-in-out infinite;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotateY(0deg); }
-            50% { transform: translateY(-20px) rotateY(180deg); }
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-15px) rotate(10deg); }
         }
 
         h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold);
             margin-bottom: 10px;
-            color: white;
-            text-shadow: 2px 2px var(--accent), -2px -2px var(--primary);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        .sub-text {
-            color: var(--primary);
-            font-size: 0.8rem;
-            letter-spacing: 2px;
+        .novel-meta {
+            font-style: italic;
+            font-size: 1.1rem;
             margin-bottom: 30px;
             opacity: 0.8;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            padding-bottom: 15px;
         }
 
-        /* شبكة البيانات التكنولوجية */
-        .data-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .quote-box {
+            font-size: 0.95rem;
+            line-height: 1.8;
             margin-bottom: 40px;
-            text-align: right;
+            min-height: 80px;
+            color: #b0a896;
         }
 
-        .data-box {
-            background: rgba(0, 255, 204, 0.05);
-            border: 1px solid rgba(0, 255, 204, 0.1);
-            padding: 15px;
-            border-radius: 20px;
-            position: relative;
-        }
-
-        .data-box::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 10px; height: 10px;
-            border-right: 2px solid var(--accent);
-            border-top: 2px solid var(--accent);
-        }
-
-        .data-box small { font-size: 0.7rem; color: #666; display: block; }
-        .data-box strong { font-size: 1rem; color: var(--primary); }
-
-        /* زر التحميل الهولوغرام */
-        .btn-hologram {
-            position: relative;
-            width: 100%;
-            height: 65px;
-            background: var(--primary);
-            color: var(--bg);
-            border: none;
-            border-radius: 20px;
-            font-size: 1.3rem;
-            font-weight: 900;
-            cursor: pointer;
-            overflow: hidden;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* زر التحميل "الختم الملكي" */
+        .download-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
             text-decoration: none;
-            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.4);
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
         }
 
-        .btn-hologram:hover {
-            transform: scale(1.05);
-            background: white;
-            box-shadow: 0 0 50px var(--primary);
+        .download-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.4);
         }
 
-        /* تأثير التشويش (Glitch) */
-        .glitch-layer {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--accent);
-            mix-blend-mode: multiply;
-            opacity: 0;
-            pointer-events: none;
+        .download-btn span {
+            position: relative;
+            z-index: 2;
         }
 
-        .btn-hologram:active .glitch-layer {
-            animation: glitch-btn 0.2s infinite;
-            opacity: 0.3;
-        }
-
-        @keyframes glitch-btn {
-            0% { transform: translate(0); }
-            25% { transform: translate(5px, -5px); }
-            50% { transform: translate(-5px, 5px); }
-            100% { transform: translate(0); }
-        }
-
-        .footer-secure {
+        .footer-info {
             margin-top: 30px;
-            font-size: 0.7rem;
-            color: #444;
+            font-size: 0.8rem;
+            color: rgba(197, 160, 89, 0.5);
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
         }
 
-        .pulse-dot {
-            width: 8px; height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--primary);
-            animation: pulse-dot 1s infinite;
+        /* أنيميشن دخول الصفحة */
+        .reveal {
+            animation: revealUp 1.5s forwards;
         }
 
-        @keyframes pulse-dot {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2.5); opacity: 0; }
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
     </style>
 </head>
 <body>
 
-<canvas id="matrix"></canvas>
+<div id="particles-js"></div>
 
-<div class="world" id="scene">
-    <div class="card" id="card">
-        <div class="scanner"></div>
-        
-        <i class="fas fa-atom icon-shield"></i>
-        
-        <h1>الإيلفار</h1>
-        <div class="sub-text">ENCRYPTED DATA STREAM</div>
-
-        <div class="data-grid">
-            <div class="data-box">
-                <small>الحجم</small>
-                <strong>4.2 MB</strong>
-            </div>
-            <div class="data-box">
-                <small>التشفير</small>
-                <strong>AES-256</strong>
-            </div>
-            <div class="data-box">
-                <small>المصدر</small>
-                <strong>SECURE-SRV</strong>
-            </div>
-            <div class="data-box">
-                <small>الوصول</small>
-                <strong>GUEST_01</strong>
-            </div>
+<div class="novel-wrapper reveal">
+    <div class="book-card" id="bookCard">
+        <div class="feather-icon">
+            <i class="fas fa-feather-alt"></i>
         </div>
 
-        <a href="33.pdf" download class="btn-hologram">
-            <div class="glitch-layer"></div>
-            <i class="fas fa-download" style="margin-left: 15px;"></i>
-            تحميل النظام
+        <h1>رواية الإيلفار</h1>
+        <p class="novel-meta">مخطوطة الخيال والغموض</p>
+
+        <div class="quote-box" id="quoteText">
+            "في عتمة الزمن، يولد الضوء من بين طيات الأقدار.. حيث الإيلفار لا ينسون العهد."
+        </div>
+
+        <a href="33.pdf" download class="download-btn">
+            <span>اقتنِ النسخة الكاملة</span>
         </a>
 
-        <div class="footer-secure">
-            <div class="pulse-dot"></div>
-            اتصال آمن ومحمي من الطرفين
+        <div class="footer-info">
+            <span><i class="fas fa-scroll"></i> PDF</span>
+            <span><i class="fas fa-feather"></i> 4.2 MB</span>
+            <span><i class="fas fa-bookmark"></i> مجانية</span>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script>
-    /* 1. Matrix Background Effect */
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-
-    for (let i = 0; i < columns; i++) drops[i] = 1;
-
-    function drawMatrix() {
-        ctx.fillStyle = "rgba(2, 5, 10, 0.1)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#00ffcc";
-        ctx.font = fontSize + "px monospace";
-
-        for (let i = 0; i < drops.length; i++) {
-            const text = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
+    /* تهيئة الجزيئات السحرية */
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 80 },
+            "color": { "value": "#c5a059" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.5, "random": true },
+            "size": { "value": 3, "random": true },
+            "line_linked": { "enable": false },
+            "move": {
+                "enable": true,
+                "speed": 1,
+                "direction": "top",
+                "random": true,
+                "straight": false,
+                "out_mode": "out"
             }
-            drops[i]++;
         }
-    }
-    setInterval(drawMatrix, 50);
+    });
 
-    /* 2. Advanced 3D Parallax */
-    const scene = document.getElementById('scene');
-    const card = document.getElementById('card');
-
+    /* تأثير الـ 3D عند التحريك */
+    const card = document.getElementById('bookCard');
     document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 20;
-        const y = (window.innerHeight / 2 - e.pageY) / 20;
-
-        card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
-        
-        // تحريك الظل بناءً على مكان الماوس
-        card.style.boxShadow = `${x}px ${y}px 50px rgba(0, 255, 204, 0.2)`;
+        let x = (window.innerWidth / 2 - e.pageX) / 25;
+        let y = (window.innerHeight / 2 - e.pageY) / 25;
+        card.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
     });
 
-    /* 3. Window Resize Handler */
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-
-    /* 4. Smooth Entrance */
-    window.onload = () => {
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.8) translateZ(-500px)';
+    /* تبديل الاقتباسات تلقائياً */
+    const quotes = [
+        "\"الأسرار هي العملة الوحيدة التي لا تفقد قيمتها في عالم الإيلفار.\"",
+        "\"خلف كل باب مغلق، هناك حكاية تنتظر من يجرؤ على قراءتها.\"",
+        "\"عندما تتصادم الأساطير مع الواقع، يظهر الإيلفار ليرسموا الطريق.\""
+    ];
+    let qIndex = 0;
+    setInterval(() => {
+        const qBox = document.getElementById('quoteText');
+        qBox.style.opacity = 0;
         setTimeout(() => {
-            card.style.transition = 'all 1.5s cubic-bezier(0.19, 1, 0.22, 1)';
-            card.style.opacity = '1';
-            card.style.transform = 'scale(1) translateZ(0)';
-        }, 300);
-    };
+            qIndex = (qIndex + 1) % quotes.length;
+            qBox.innerText = quotes[qIndex];
+            qBox.style.opacity = 1;
+        }, 500);
+    }, 5000);
 </script>
 
 </body>
