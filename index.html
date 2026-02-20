@@ -128,7 +128,8 @@ box-shadow:0 0 clamp(40px,5vw,120px) var(--glow);
 }
 }
 
-/* ===== مودال ===== */
+/* ===== مودال احترافي متكيف بالكامل ===== */
+
 .modal{
 position:fixed;
 inset:0;
@@ -138,9 +139,17 @@ justify-content:center;
 align-items:center;
 opacity:0;
 visibility:hidden;
-transition:0.5s ease;
+transition:0.4s ease;
 backdrop-filter:blur(10px);
-padding:20px;
+
+/* مهم */
+padding:
+max(20px, env(safe-area-inset-top))
+max(20px, env(safe-area-inset-right))
+max(20px, env(safe-area-inset-bottom))
+max(20px, env(safe-area-inset-left));
+
+overflow-y:auto; /* يسمح بالتمرير لو الشاشة قصيرة */
 }
 
 .modal.active{
@@ -149,66 +158,35 @@ visibility:visible;
 }
 
 .modal-content{
-width:100%;
-max-width:420px;
-max-height:90dvh;
-overflow:auto;
+width:min(100%, 420px);
+max-height:100%;
 background:#0a0a12;
 border:1px solid var(--gold);
-padding:clamp(25px,5vw,50px);
+padding:clamp(20px,4vw,40px);
 text-align:center;
-animation:scaleIn .5s ease;
-border-radius:12px;
-will-change:transform;
+animation:scaleIn .4s ease;
+border-radius:14px;
+
+/* يمنع الخروج خارج الشاشة */
+overflow-y:auto;
 }
 
-@keyframes scaleIn{
-from{transform:scale(.7);opacity:0}
-to{transform:scale(1);opacity:1}
+/* تحسين خاص للشاشات القصيرة جداً */
+@media (max-height:650px){
+.modal{
+align-items:flex-start;
+}
+.modal-content{
+margin-top:30px;
+margin-bottom:30px;
+}
 }
 
-.modal-content h2{
-color:var(--gold);
-margin-bottom:20px;
-font-size:clamp(1.2rem,3vw,1.8rem);
+/* تحسين للهواتف الصغيرة جداً */
+@media (max-width:360px){
+.modal-content{
+padding:18px;
 }
-
-.file-info{
-margin-bottom:20px;
-opacity:.7;
-min-height:20px;
-}
-
-.modal-buttons{
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-.modal-buttons a{
-padding:12px;
-border:1px solid var(--gold);
-color:var(--gold);
-text-decoration:none;
-transition:0.4s;
-font-size:clamp(0.9rem,2.5vw,1rem);
-}
-
-.modal-buttons a:hover{
-background:var(--gold);
-color:#000;
-}
-
-.close{
-margin-top:15px;
-font-size:.8rem;
-opacity:.6;
-cursor:pointer;
-transition:.3s;
-}
-
-.close:hover{
-opacity:1;
 }
 
 /* ===== تحسين الشاشات القصيرة جداً ===== */
