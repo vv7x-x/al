@@ -36,6 +36,7 @@
             align-items: center;
             overflow: hidden;
             perspective: 1000px;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
         /* ===== Cinematic Background ===== */
@@ -142,22 +143,22 @@
         }
 
         .ring-1 {
-            width: 110%;
-            height: 110%;
+            width: clamp(100%, 110%, 110%);
+            height: clamp(100%, 110%, 110%);
             animation: rotate 30s linear infinite;
             border-style: dashed;
         }
 
         .ring-2 {
-            width: 125%;
-            height: 125%;
+            width: clamp(110%, 125%, 125%);
+            height: clamp(110%, 125%, 125%);
             animation: rotate 45s linear infinite reverse;
             opacity: 0.15;
         }
 
         .ring-3 {
-            width: 140%;
-            height: 140%;
+            width: clamp(120%, 140%, 140%);
+            height: clamp(120%, 140%, 140%);
             animation: rotate 60s linear infinite;
             opacity: 0.1;
         }
@@ -222,15 +223,17 @@
         .modal-content {
             width: 100%;
             max-width: 450px;
+            max-height: 85vh;
             background: var(--panel-bg);
             border: 1px solid var(--gold);
             border-radius: 24px;
-            padding: 3rem 2rem;
+            padding: clamp(1.5rem, 6vw, 3rem) clamp(1rem, 5vw, 2rem);
             text-align: center;
             position: relative;
             transform: translateY(30px);
             transition: var(--transition);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
         }
 
         .modal.active .modal-content {
@@ -305,34 +308,51 @@
         /* ===== Responsive Fixes ===== */
         @media (max-width: 480px) {
             .portal-wrapper {
-                width: 95vw;
+                width: 85vw;
             }
 
             .portal {
-                padding: 1.5rem;
+                padding: 1.5rem 1rem;
+                border-width: 1px;
             }
 
             .modal-content {
-                padding: 2rem 1.5rem;
+                padding: 2rem 1.2rem;
+                border-radius: 16px;
+                margin: 10px;
+            }
+
+            .portal h1 {
+                font-size: clamp(1.8rem, 10vw, 2.5rem);
+            }
+
+            .portal p {
+                font-size: 0.85rem;
             }
         }
 
-        @media (max-height: 650px) {
+        @media (max-height: 700px) {
             .portal-wrapper {
-                height: 90dvh;
-                aspect-ratio: auto;
+                height: 75dvh;
+                width: auto;
+                aspect-ratio: 1/1.2;
             }
 
             .portal {
-                height: 90%;
+                padding: 1rem;
             }
 
             .modal-content {
-                padding: 1.5rem;
+                padding: 1.5rem 1rem;
+                max-height: 90vh;
             }
 
             .file-info {
-                margin-bottom: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .portal h1 {
+                margin-bottom: 0.2rem;
             }
         }
     </style>
