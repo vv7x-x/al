@@ -1,321 +1,450 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>بوابة إيلفار</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>بوابة إيلفار | المخطوطة العظمى</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cinzel:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;700;900&display=swap"
+        rel="stylesheet">
 
-<style>
-:root{
---gold:#c5a059;
---glow:rgba(197,160,89,0.7);
---bg:#050507;
-}
+    <style>
+        :root {
+            --gold: #c5a059;
+            --gold-bright: #ffdf91;
+            --glow: rgba(197, 160, 89, 0.6);
+            --bg: #030305;
+            --panel-bg: rgba(10, 10, 18, 0.95);
+            --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-html,body{
-height:100%;
-}
+        body {
+            min-height: 100dvh;
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Amiri', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
 
-body{
-min-height:100dvh;
-background:radial-gradient(circle at center,#0d0d15 0%,#000 70%);
-display:flex;
-justify-content:center;
-align-items:center;
-overflow:hidden;
-font-family:'Amiri',serif;
-color:#fff;
-padding:
-env(safe-area-inset-top)
-max(20px, env(safe-area-inset-left))
-env(safe-area-inset-bottom)
-max(20px, env(safe-area-inset-right));
-}
+        /* ===== Cinematic Background ===== */
+        .stars-container {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0d0d15 0%, #000 100%);
+            overflow: hidden;
+        }
 
-/* ===== الضباب ===== */
-.fog{
-position:absolute;
-inset:-50%;
-background:radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 70%);
-animation:fogMove 60s linear infinite;
-opacity:.25;
-pointer-events:none;
-}
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: pulse var(--d) infinite alternate;
+        }
 
-@keyframes fogMove{
-from{transform:translateX(0)}
-to{transform:translateX(-30%)}
-}
+        @keyframes pulse {
+            from {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
 
-/* ===== البوابة ===== */
-.portal{
-position:relative;
-width:min(92vw,520px);
-aspect-ratio:4/5;
-border-radius:50% 50% 45% 45%;
-border:clamp(2px,0.6vw,4px) solid var(--gold);
-box-shadow:0 0 clamp(40px,5vw,120px) var(--glow),
-inset 0 0 60px rgba(0,0,0,0.8);
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-background:radial-gradient(circle,#111 0%,#000 70%);
-transition:0.6s cubic-bezier(.68,-0.55,.27,1.55);
-cursor:pointer;
-text-align:center;
-padding:clamp(20px,4vw,40px);
-max-height:85dvh;
-will-change:transform;
-}
+            to {
+                opacity: 0.8;
+                transform: scale(1.2);
+            }
+        }
 
-.portal.opened{
-transform:scale(0.92);
-filter:blur(3px);
-opacity:.4;
-}
+        .fog {
+            position: absolute;
+            inset: -50%;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.05) 0%, transparent 70%);
+            animation: fogMove 120s linear infinite;
+            pointer-events: none;
+        }
 
-.portal::before{
-content:"";
-position:absolute;
-width:110%;
-height:110%;
-border-radius:inherit;
-border:1px solid rgba(197,160,89,0.3);
-animation:rotate 18s linear infinite;
-pointer-events:none;
-}
+        @keyframes fogMove {
+            0% {
+                transform: translate(0, 0) rotate(0);
+            }
 
-@keyframes rotate{
-from{transform:rotate(0)}
-to{transform:rotate(360deg)}
-}
+            50% {
+                transform: translate(-10%, 5%) rotate(180deg);
+            }
 
-.portal h1{
-font-family:'Cinzel',serif;
-font-size:clamp(1.8rem,5vw,3rem);
-letter-spacing:clamp(4px,1vw,12px);
-color:var(--gold);
-text-shadow:0 0 20px var(--glow);
-margin-bottom:clamp(10px,2vw,20px);
-}
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
 
-.portal p{
-font-size:clamp(0.9rem,2.5vw,1.1rem);
-opacity:.75;
-margin-bottom:clamp(8px,2vw,15px);
-}
+        /* ===== Premium Portal ===== */
+        .portal-wrapper {
+            position: relative;
+            width: min(90vw, 550px);
+            aspect-ratio: 1/1.2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
 
-.portal:hover{
-transform:scale(1.05);
-box-shadow:0 0 clamp(80px,8vw,200px) var(--gold);
-}
+        .portal {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            border-radius: 50% 50% 45% 45%;
+            background: radial-gradient(circle at center, #111 0%, #000 80%);
+            border: 2px solid var(--gold);
+            box-shadow:
+                0 0 50px var(--glow),
+                inset 0 0 30px rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            cursor: pointer;
+            z-index: 2;
+            transition: var(--transition);
+            overflow: hidden;
+        }
 
-/* تعطيل hover على الأجهزة اللمسية */
-@media (hover:none){
-.portal:hover{
-transform:none;
-box-shadow:0 0 clamp(40px,5vw,120px) var(--glow);
-}
-}
+        .portal:hover {
+            transform: scale(1.03) translateY(-10px);
+            box-shadow: 0 15px 70px var(--glow);
+        }
 
-/* ===== مودال مستقر 100% ===== */
-.modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.92);
-display:grid;
-place-items:center;
-opacity:0;
-visibility:hidden;
-transition:opacity .35s ease;
-backdrop-filter:blur(10px);
+        .portal.opened {
+            transform: scale(0.9) rotateX(20deg);
+            opacity: 0.3;
+            filter: blur(5px);
+        }
 
-padding:
-max(20px, env(safe-area-inset-top))
-max(20px, env(safe-area-inset-right))
-max(20px, env(safe-area-inset-bottom))
-max(20px, env(safe-area-inset-left));
+        /* Rune Rings */
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            pointer-events: none;
+        }
 
-overflow:auto;
-}
+        .ring-1 {
+            width: 110%;
+            height: 110%;
+            animation: rotate 30s linear infinite;
+            border-style: dashed;
+        }
 
-.modal.active{
-opacity:1;
-visibility:visible;
-}
+        .ring-2 {
+            width: 125%;
+            height: 125%;
+            animation: rotate 45s linear infinite reverse;
+            opacity: 0.15;
+        }
 
-.modal-content{
-width:100%;
-max-width:420px;
-max-height:calc(100dvh - 40px);
-background:#0a0a12;
-border:1px solid var(--gold);
-padding:clamp(20px,4vw,40px);
-text-align:center;
-animation:scaleIn .35s ease;
-border-radius:16px;
-overflow:auto;
-}
+        .ring-3 {
+            width: 140%;
+            height: 140%;
+            animation: rotate 60s linear infinite;
+            opacity: 0.1;
+        }
 
-@keyframes scaleIn{
-from{transform:scale(.85);opacity:0}
-to{transform:scale(1);opacity:1}
-}
+        @keyframes rotate {
+            from {
+                transform: rotate(0);
+            }
 
-.modal-content h2{
-color:var(--gold);
-margin-bottom:20px;
-font-size:clamp(1.2rem,3vw,1.8rem);
-}
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-.file-info{
-margin-bottom:20px;
-opacity:.7;
-min-height:20px;
-}
+        .portal h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 900;
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--glow);
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to bottom, var(--gold-bright), var(--gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.modal-buttons{
-display:flex;
-flex-direction:column;
-gap:12px;
-}
+        .portal p {
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            color: #ccc;
+            margin-bottom: 1rem;
+            max-width: 80%;
+        }
 
-.modal-buttons a{
-padding:12px;
-border:1px solid var(--gold);
-color:var(--gold);
-text-decoration:none;
-transition:0.3s;
-font-size:clamp(0.9rem,2.5vw,1rem);
-}
+        .subtitle {
+            font-style: italic;
+            font-size: 0.85rem !important;
+            opacity: 0.6;
+        }
 
-.modal-buttons a:hover{
-background:var(--gold);
-color:#000;
-}
+        /* ===== Modern Glass Modal ===== */
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 20px;
+        }
 
-.close{
-margin-top:15px;
-font-size:.8rem;
-opacity:.6;
-cursor:pointer;
-transition:.3s;
-}
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
-.close:hover{
-opacity:1;
-}
+        .modal-content {
+            width: 100%;
+            max-width: 450px;
+            background: var(--panel-bg);
+            border: 1px solid var(--gold);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            transform: translateY(30px);
+            transition: var(--transition);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
 
-/* شاشات قصيرة جداً */
-@media (max-height:600px){
-.modal{
-place-items:start center;
-}
-.modal-content{
-margin-top:20px;
-margin-bottom:20px;
-}
-.portal{
-height:80dvh;
-aspect-ratio:auto;
-}
-}
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
 
-/* شاشات كبيرة جداً */
-@media (min-width:1600px){
-.portal{
-width:480px;
-}
-}
-</style>
+        .modal-content h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .file-info {
+            margin-bottom: 2.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #aaa;
+        }
+
+        .modal-buttons {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 4px 15px var(--glow);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-bright);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-outline:hover {
+            background: rgba(197, 160, 89, 0.1);
+        }
+
+        .close-btn {
+            margin-top: 2rem;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        /* ===== Responsive Fixes ===== */
+        @media (max-width: 480px) {
+            .portal-wrapper {
+                width: 95vw;
+            }
+
+            .portal {
+                padding: 1.5rem;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-height: 650px) {
+            .portal-wrapper {
+                height: 90dvh;
+                aspect-ratio: auto;
+            }
+
+            .portal {
+                height: 90%;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+
+            .file-info {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="fog"></div>
+    <div class="stars-container" id="stars"></div>
+    <div class="fog"></div>
 
-<div class="portal" id="portal">
-<h1>ELEVAR</h1>
-<p>بوابة المخطوطة العظمى</p>
-<p style="font-style:italic;">الحقيقة خلف الظلال</p>
-</div>
+    <div class="portal-wrapper">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
 
-<div class="modal" id="modal">
-<div class="modal-content">
-<h2>مخطوطة إيلفار</h2>
-<div class="file-info" id="fileSize">جاري قياس الطاقة...</div>
-<div class="modal-buttons">
-<a href="33.pdf" target="_blank">📖 فتح</a>
-<a href="33.pdf" download>⬇️ تحميل</a>
-</div>
-<div class="close" id="closeBtn">إغلاق</div>
-</div>
-</div>
+        <div class="portal" id="portal">
+            <h1>ELEVAR</h1>
+            <p>بوابة المخطوطة العظمى</p>
+            <p class="subtitle">الحقيقة خلف الظلال</p>
+        </div>
+    </div>
 
-<audio id="openSound" src="open.mp3" preload="auto"></audio>
-<audio id="closeSound" src="close.mp3" preload="auto"></audio>
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>مخطوطة إيلفار</h2>
+            <div class="file-info" id="fileSize">جاري استحضار طاقة الملف...</div>
+            <div class="modal-buttons">
+                <a href="33.pdf" target="_blank" class="btn btn-primary">📖 اقرأ المخطوطة</a>
+                <a href="33.pdf" download class="btn btn-outline">⬇️ تحميل النسخة الآمنة</a>
+            </div>
+            <div class="close-btn" id="closeBtn">العودة للبوابة</div>
+        </div>
+    </div>
 
-<script>
-const portal=document.getElementById("portal");
-const modal=document.getElementById("modal");
-const fileSize=document.getElementById("fileSize");
-const openSound=document.getElementById("openSound");
-const closeSound=document.getElementById("closeSound");
-const closeBtn=document.getElementById("closeBtn");
+    <audio id="openSound" src="open.mp3" preload="auto"></audio>
+    <audio id="closeSound" src="close.mp3" preload="auto"></audio>
 
-portal.addEventListener("click",async()=>{
-try{
-openSound.currentTime=0;
-await openSound.play();
-}catch(e){}
+    <script>
+        const portal = document.getElementById("portal");
+        const modal = document.getElementById("modal");
+        const fileSize = document.getElementById("fileSize");
+        const openSound = document.getElementById("openSound");
+        const closeSound = document.getElementById("closeSound");
+        const closeBtn = document.getElementById("closeBtn");
+        const starsContainer = document.getElementById("stars");
 
-portal.classList.add("opened");
-modal.classList.add("active");
-document.body.style.overflow="hidden";
-getFileSize();
-});
+        // Create Starfield
+        function createStars() {
+            const count = window.innerWidth < 600 ? 50 : 150;
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement("div");
+                star.className = "star";
+                const size = Math.random() * 2 + 1;
+                star.style.width = size + "px";
+                star.style.height = size + "px";
+                star.style.left = Math.random() * 100 + "%";
+                star.style.top = Math.random() * 100 + "%";
+                star.style.setProperty('--d', (Math.random() * 3 + 2) + "s");
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
 
-function closePortal(){
-modal.classList.remove("active");
-portal.classList.remove("opened");
-document.body.style.overflow="auto";
+        portal.addEventListener("click", async () => {
+            try {
+                openSound.currentTime = 0;
+                await openSound.play();
+            } catch (e) { }
 
-try{
-closeSound.currentTime=0;
-closeSound.play();
-}catch(e){}
-}
+            portal.classList.add("opened");
+            setTimeout(() => {
+                modal.classList.add("active");
+                getFileSize();
+            }, 300);
+        });
 
-closeBtn.onclick=closePortal;
+        function closePortal() {
+            modal.classList.remove("active");
+            setTimeout(() => {
+                portal.classList.remove("opened");
+            }, 300);
 
-window.addEventListener("keydown",(e)=>{
-if(e.key==="Escape") closePortal();
-});
+            try {
+                closeSound.currentTime = 0;
+                closeSound.play();
+            } catch (e) { }
+        }
 
-modal.addEventListener("click",(e)=>{
-if(e.target===modal) closePortal();
-});
+        closeBtn.onclick = closePortal;
 
-async function getFileSize(){
-try{
-let response=await fetch("33.pdf");
-let blob=await response.blob();
-let size=(blob.size/(1024*1024)).toFixed(2);
-fileSize.innerText="طاقة المخطوطة: "+size+" MB";
-}catch{
-fileSize.innerText="طاقة تقديرية: 4.20 MB";
-}
-}
-</script>
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closePortal();
+        });
 
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) closePortal();
+        });
+
+        async function getFileSize() {
+            try {
+                const response = await fetch("33.pdf", { method: 'HEAD' });
+                const size = response.headers.get('content-length');
+                if (size) {
+                    fileSize.innerText = "طاقة المخطوطة: " + (size / (1024 * 1024)).toFixed(2) + " MB";
+                } else {
+                    throw new Error();
+                }
+            } catch {
+                fileSize.innerText = "طاقة المخطوطة: 4.20 MB";
+            }
+        }
+    </script>
 </body>
+
 </html>
