@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>بوابة إيلفار</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cinzel:wght@900&display=swap" rel="stylesheet">
@@ -10,81 +10,70 @@
 <style>
 :root{
 --gold:#c5a059;
---void:#050507;
 --glow:rgba(197,160,89,0.7);
---transition:0.6s ease;
+--bg:#050507;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html,body{
+height:100%;
+}
 
 body{
 background:radial-gradient(circle at center,#0d0d15 0%,#000 70%);
-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
 overflow:hidden;
 font-family:'Amiri',serif;
 color:#fff;
+padding:env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
 }
 
-/* ===== ضباب حي ===== */
+/* ===== الضباب ===== */
 .fog{
 position:absolute;
-width:200%;
-height:200%;
+inset:-50%;
 background:radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 70%);
-animation:fogMove 50s linear infinite;
-opacity:.3;
+animation:fogMove 60s linear infinite;
+opacity:.25;
 }
 
 @keyframes fogMove{
 from{transform:translateX(0)}
-to{transform:translateX(-50%)}
-}
-
-/* ===== وميض ===== */
-.flash{
-position:absolute;
-inset:0;
-background:#fff;
-opacity:0;
-pointer-events:none;
-}
-
-.flash.active{
-animation:flash 1s ease forwards;
-}
-
-@keyframes flash{
-0%{opacity:0}
-50%{opacity:.9}
-100%{opacity:0}
+to{transform:translateX(-30%)}
 }
 
 /* ===== البوابة ===== */
 .portal{
 position:relative;
-width:420px;
-height:520px;
+width:clamp(260px, 60vw, 520px);
+aspect-ratio:4/5;
 border-radius:50% 50% 45% 45%;
-border:4px solid var(--gold);
-box-shadow:0 0 80px var(--glow), inset 0 0 60px rgba(0,0,0,0.8);
+border:clamp(2px,0.6vw,4px) solid var(--gold);
+box-shadow:0 0 clamp(40px,5vw,120px) var(--glow),
+inset 0 0 60px rgba(0,0,0,0.8);
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
 background:radial-gradient(circle,#111 0%,#000 70%);
-transition:var(--transition);
+transition:0.6s ease;
 cursor:pointer;
 text-align:center;
+padding:clamp(20px,4vw,40px);
 }
 
 .portal::before{
 content:"";
 position:absolute;
-width:115%;
-height:115%;
+width:110%;
+height:110%;
 border-radius:inherit;
 border:1px solid rgba(197,160,89,0.3);
 animation:rotate 18s linear infinite;
@@ -97,26 +86,23 @@ to{transform:rotate(360deg)}
 
 .portal h1{
 font-family:'Cinzel',serif;
-font-size:3rem;
-letter-spacing:12px;
+font-size:clamp(1.8rem,5vw,3rem);
+letter-spacing:clamp(4px,1vw,12px);
 color:var(--gold);
-text-shadow:0 0 25px var(--glow);
-margin-bottom:20px;
+text-shadow:0 0 20px var(--glow);
+margin-bottom:clamp(10px,2vw,20px);
 transition:0.4s;
 }
 
-.portal:hover h1{
-letter-spacing:18px;
-}
-
 .portal p{
-opacity:.7;
-margin-bottom:20px;
+font-size:clamp(0.9rem,2.5vw,1.1rem);
+opacity:.75;
+margin-bottom:clamp(8px,2vw,15px);
 }
 
-.portal.open{
-transform:scale(1.1);
-box-shadow:0 0 200px var(--gold);
+.portal:hover{
+transform:scale(1.05);
+box-shadow:0 0 clamp(80px,8vw,200px) var(--gold);
 }
 
 /* ===== مودال ===== */
@@ -129,8 +115,9 @@ justify-content:center;
 align-items:center;
 opacity:0;
 visibility:hidden;
-transition:var(--transition);
+transition:0.5s ease;
 backdrop-filter:blur(10px);
+padding:20px;
 }
 
 .modal.active{
@@ -139,27 +126,22 @@ visibility:visible;
 }
 
 .modal-content{
+width:100%;
+max-width:400px;
 background:#0a0a12;
 border:1px solid var(--gold);
-padding:50px;
+padding:clamp(25px,5vw,50px);
 text-align:center;
-width:90%;
-max-width:400px;
-animation:rise 0.6s ease;
-}
-
-@keyframes rise{
-from{transform:translateY(50px);opacity:0}
-to{transform:translateY(0);opacity:1}
 }
 
 .modal-content h2{
 color:var(--gold);
 margin-bottom:20px;
+font-size:clamp(1.2rem,3vw,1.8rem);
 }
 
 .file-info{
-margin-bottom:25px;
+margin-bottom:20px;
 opacity:.7;
 min-height:20px;
 }
@@ -167,15 +149,16 @@ min-height:20px;
 .modal-buttons{
 display:flex;
 flex-direction:column;
-gap:15px;
+gap:12px;
 }
 
 .modal-buttons a{
-padding:15px;
+padding:12px;
 border:1px solid var(--gold);
 color:var(--gold);
 text-decoration:none;
 transition:0.4s;
+font-size:clamp(0.9rem,2.5vw,1rem);
 }
 
 .modal-buttons a:hover{
@@ -184,21 +167,17 @@ color:#000;
 }
 
 .close{
-margin-top:20px;
+margin-top:15px;
 font-size:.8rem;
-opacity:.5;
+opacity:.6;
 cursor:pointer;
 }
 
-/* ===== Responsive ===== */
-@media(max-width:600px){
+/* ===== تحسين الشاشات القصيرة ===== */
+@media (max-height:600px){
 .portal{
-width:300px;
-height:400px;
-}
-.portal h1{
-font-size:2.2rem;
-letter-spacing:6px;
+aspect-ratio:auto;
+height:80vh;
 }
 }
 </style>
@@ -207,12 +186,11 @@ letter-spacing:6px;
 <body>
 
 <div class="fog"></div>
-<div class="flash" id="flash"></div>
 
 <div class="portal" id="portal">
 <h1>ELEVAR</h1>
 <p>بوابة المخطوطة العظمى</p>
-<p style="font-style:italic;">"الحقيقة خلف الظلال"</p>
+<p style="font-style:italic;">الحقيقة خلف الظلال</p>
 </div>
 
 <div class="modal" id="modal">
@@ -220,10 +198,10 @@ letter-spacing:6px;
 <h2>مخطوطة إيلفار</h2>
 <div class="file-info" id="fileSize">جاري قياس الطاقة...</div>
 <div class="modal-buttons">
-<a href="33.pdf" target="_blank">📖 فتح المخطوطة</a>
+<a href="33.pdf" target="_blank">📖 فتح</a>
 <a href="33.pdf" download>⬇️ تحميل</a>
 </div>
-<div class="close" id="closeBtn">إغلاق البوابة</div>
+<div class="close" id="closeBtn">إغلاق</div>
 </div>
 </div>
 
@@ -232,7 +210,6 @@ letter-spacing:6px;
 <script>
 const portal=document.getElementById("portal");
 const modal=document.getElementById("modal");
-const flash=document.getElementById("flash");
 const fileSize=document.getElementById("fileSize");
 const sound=document.getElementById("portalSound");
 const closeBtn=document.getElementById("closeBtn");
@@ -244,22 +221,14 @@ sound.volume=1;
 await sound.play();
 }catch(e){}
 
-portal.classList.add("open");
-flash.classList.add("active");
-document.body.style.overflow="hidden";
-
-setTimeout(()=>{
 modal.classList.add("active");
+document.body.style.overflow="hidden";
 getFileSize();
 fadeOutAudio();
-},900);
-
-navigator.vibrate?.(200);
 });
 
 function closePortal(){
 modal.classList.remove("active");
-portal.classList.remove("open");
 document.body.style.overflow="auto";
 }
 
@@ -282,7 +251,7 @@ sound.pause();
 sound.volume=1;
 clearInterval(fade);
 }
-},100);
+},120);
 }
 
 async function getFileSize(){
