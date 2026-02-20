@@ -10,14 +10,15 @@
 <style>
 :root{
 --gold:#c5a059;
---void:#020204;
+--void:#050507;
 --glow:rgba(197,160,89,0.7);
+--transition:0.6s ease;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{
-background:radial-gradient(circle at center,#0c0c12 0%,#000 70%);
+background:radial-gradient(circle at center,#0d0d15 0%,#000 70%);
 height:100vh;
 display:flex;
 justify-content:center;
@@ -27,18 +28,38 @@ font-family:'Amiri',serif;
 color:#fff;
 }
 
-/* ===== الضباب ===== */
+/* ===== ضباب حي ===== */
 .fog{
 position:absolute;
 width:200%;
 height:200%;
 background:radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 70%);
-animation:fogMove 40s linear infinite;
+animation:fogMove 50s linear infinite;
+opacity:.3;
 }
 
 @keyframes fogMove{
 from{transform:translateX(0)}
 to{transform:translateX(-50%)}
+}
+
+/* ===== وميض ===== */
+.flash{
+position:absolute;
+inset:0;
+background:#fff;
+opacity:0;
+pointer-events:none;
+}
+
+.flash.active{
+animation:flash 1s ease forwards;
+}
+
+@keyframes flash{
+0%{opacity:0}
+50%{opacity:.9}
+100%{opacity:0}
 }
 
 /* ===== البوابة ===== */
@@ -54,18 +75,19 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 background:radial-gradient(circle,#111 0%,#000 70%);
-transition:1s ease;
+transition:var(--transition);
 cursor:pointer;
+text-align:center;
 }
 
 .portal::before{
 content:"";
 position:absolute;
-width:110%;
-height:110%;
+width:115%;
+height:115%;
 border-radius:inherit;
 border:1px solid rgba(197,160,89,0.3);
-animation:rotate 15s linear infinite;
+animation:rotate 18s linear infinite;
 }
 
 @keyframes rotate{
@@ -76,56 +98,39 @@ to{transform:rotate(360deg)}
 .portal h1{
 font-family:'Cinzel',serif;
 font-size:3rem;
-letter-spacing:10px;
+letter-spacing:12px;
 color:var(--gold);
-text-shadow:0 0 20px var(--glow);
+text-shadow:0 0 25px var(--glow);
 margin-bottom:20px;
+transition:0.4s;
+}
+
+.portal:hover h1{
+letter-spacing:18px;
 }
 
 .portal p{
 opacity:.7;
-margin-bottom:30px;
+margin-bottom:20px;
 }
 
-.portal:hover{
-box-shadow:0 0 120px var(--glow), inset 0 0 80px rgba(0,0,0,1);
-}
-
-/* ===== فتح البوابة ===== */
 .portal.open{
 transform:scale(1.1);
 box-shadow:0 0 200px var(--gold);
 }
 
-.flash{
-position:absolute;
-inset:0;
-background:#fff;
-opacity:0;
-pointer-events:none;
-}
-
-.flash.active{
-animation:flash 1s ease forwards;
-}
-
-@keyframes flash{
-0%{opacity:0}
-50%{opacity:.8}
-100%{opacity:0}
-}
-
-/* ===== المودال ===== */
+/* ===== مودال ===== */
 .modal{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,0.9);
+background:rgba(0,0,0,0.92);
 display:flex;
 justify-content:center;
 align-items:center;
 opacity:0;
 visibility:hidden;
-transition:0.6s;
+transition:var(--transition);
+backdrop-filter:blur(10px);
 }
 
 .modal.active{
@@ -134,7 +139,7 @@ visibility:visible;
 }
 
 .modal-content{
-background:#0a0a10;
+background:#0a0a12;
 border:1px solid var(--gold);
 padding:50px;
 text-align:center;
@@ -144,13 +149,19 @@ animation:rise 0.6s ease;
 }
 
 @keyframes rise{
-from{transform:translateY(40px);opacity:0}
+from{transform:translateY(50px);opacity:0}
 to{transform:translateY(0);opacity:1}
 }
 
 .modal-content h2{
 color:var(--gold);
 margin-bottom:20px;
+}
+
+.file-info{
+margin-bottom:25px;
+opacity:.7;
+min-height:20px;
 }
 
 .modal-buttons{
@@ -178,6 +189,18 @@ font-size:.8rem;
 opacity:.5;
 cursor:pointer;
 }
+
+/* ===== Responsive ===== */
+@media(max-width:600px){
+.portal{
+width:300px;
+height:400px;
+}
+.portal h1{
+font-size:2.2rem;
+letter-spacing:6px;
+}
+}
 </style>
 </head>
 
@@ -189,40 +212,77 @@ cursor:pointer;
 <div class="portal" id="portal">
 <h1>ELEVAR</h1>
 <p>بوابة المخطوطة العظمى</p>
-<p style="font-style:italic;">"أنصت... الحقيقة خلف الظلال"</p>
+<p style="font-style:italic;">"الحقيقة خلف الظلال"</p>
 </div>
 
 <div class="modal" id="modal">
 <div class="modal-content">
 <h2>مخطوطة إيلفار</h2>
-<p id="fileSize">جاري قياس الطاقة...</p>
+<div class="file-info" id="fileSize">جاري قياس الطاقة...</div>
 <div class="modal-buttons">
 <a href="33.pdf" target="_blank">📖 فتح المخطوطة</a>
 <a href="33.pdf" download>⬇️ تحميل</a>
 </div>
-<div class="close" onclick="closePortal()">إغلاق البوابة</div>
+<div class="close" id="closeBtn">إغلاق البوابة</div>
 </div>
 </div>
+
+<audio id="portalSound" src="portal.mp3" preload="auto"></audio>
 
 <script>
 const portal=document.getElementById("portal");
 const modal=document.getElementById("modal");
 const flash=document.getElementById("flash");
 const fileSize=document.getElementById("fileSize");
+const sound=document.getElementById("portalSound");
+const closeBtn=document.getElementById("closeBtn");
 
-portal.addEventListener("click",()=>{
+portal.addEventListener("click",async()=>{
+try{
+sound.currentTime=0;
+sound.volume=1;
+await sound.play();
+}catch(e){}
+
 portal.classList.add("open");
 flash.classList.add("active");
+document.body.style.overflow="hidden";
 
 setTimeout(()=>{
 modal.classList.add("active");
 getFileSize();
-},800);
+fadeOutAudio();
+},900);
+
+navigator.vibrate?.(200);
 });
 
 function closePortal(){
 modal.classList.remove("active");
 portal.classList.remove("open");
+document.body.style.overflow="auto";
+}
+
+closeBtn.onclick=closePortal;
+
+window.addEventListener("keydown",(e)=>{
+if(e.key==="Escape") closePortal();
+});
+
+modal.addEventListener("click",(e)=>{
+if(e.target===modal) closePortal();
+});
+
+function fadeOutAudio(){
+let fade=setInterval(()=>{
+if(sound.volume>0.05){
+sound.volume-=0.05;
+}else{
+sound.pause();
+sound.volume=1;
+clearInterval(fade);
+}
+},100);
 }
 
 async function getFileSize(){
