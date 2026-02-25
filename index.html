@@ -479,7 +479,7 @@
 
         async function getFileSize() {
             try {
-                const response = await fetch("التي لم تكن.pdf", { method: 'HEAD' });
+                const response = await fetch("ر.pdf", { method: 'HEAD' });
                 const size = response.headers.get('content-length');
                 if (size) {
                     fileSize.innerText = "طاقة المخطوطة: " + (size / (1024 * 1024)).toFixed(2) + " MB";
